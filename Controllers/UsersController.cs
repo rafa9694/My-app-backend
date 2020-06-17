@@ -38,7 +38,7 @@ namespace My_app_backend.Controllers
         {
             _userService.Create(user);
 
-            return CreatedAtRoute("GetBook", new { id = user.Id.ToString() }, user);
+            return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
         }
 
         [HttpPut("{id:length(24)}")]
