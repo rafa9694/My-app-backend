@@ -28,14 +28,21 @@ namespace My_app_backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-        // requires using Microsoft.Extensions.Options
+            services.Configure<ArticlestoreDatabaseSettings>(
+                Configuration.GetSection(nameof(ArticlestoreDatabaseSettings)));
+
+            services.AddSingleton<IArticlestoreDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<ArticlestoreDatabaseSettings>>().Value);
+
+            services.AddSingleton<ArticleService>();
+
             services.Configure<UserstoreDatabaseSettings>(
                 Configuration.GetSection(nameof(UserstoreDatabaseSettings)));
 
             services.AddSingleton<IUserstoreDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<UserstoreDatabaseSettings>>().Value);
             services.AddSingleton<UserService>();
-        // requires using Microsoft.Extensions.Options
+
             services.Configure<CategorystoreDatabaseSettings>(
                 Configuration.GetSection(nameof(CategorystoreDatabaseSettings)));
 
