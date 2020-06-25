@@ -8,6 +8,7 @@ namespace My_app_backend.Services
     public class ArticleService
     {
         private readonly IMongoCollection<Article> _articles;
+        private readonly IMongoCollection<Category> _categories;
 
         public ArticleService(IArticlestoreDatabaseSettings settings)
         {
@@ -15,6 +16,7 @@ namespace My_app_backend.Services
             var database = client.GetDatabase(settings.DatabaseName);
 
             _articles = database.GetCollection<Article>(settings.ArticlesCollectionName);
+            _categories = database.GetCollection<Category>("Category");
         }
 
         public List<Article> Get() =>
@@ -23,10 +25,17 @@ namespace My_app_backend.Services
         public Article Get(string id) =>
             _articles.Find<Article>(article => article.Id == id).FirstOrDefault();
 
-        public Article Create(Article article)
+        public string Create(Article article)
         {
+            var category = _categories.Find<Category>(category => category.Name == article.Category_Id)
+                .FirstOrDefault();
+            if(category == null) { 
+                return $"Não foi possível localziar a Categoria {article.Category_Id}";
+            }
+            article.Category_Id = category.Id;   
             _articles.InsertOne(article);
-            return article;
+            return "Sucesso";
+            
         }
 
         public void Update(string id, Article articleIn) =>

@@ -36,8 +36,10 @@ namespace My_app_backend.Controllers
         [HttpPost]
         public ActionResult<Article> Create(Article article)
         {
-            _articleService.Create(article);
-
+             var result =_articleService.Create(article);
+            if(result != "Sucesso") {
+                return NotFound(result);
+            }
             return CreatedAtRoute("GetArticle", new { id = article.Id.ToString() }, article);
         }
 
