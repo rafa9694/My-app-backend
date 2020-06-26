@@ -10,10 +10,12 @@ namespace My_app_backend.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly CategoryService _categoryService;
+        private readonly ArticleService _articleService;
 
-        public CategoriesController(CategoryService categoryService)
+        public CategoriesController(CategoryService categoryService, ArticleService articleService)
         {
             _categoryService = categoryService;
+            _articleService = articleService;
         }
 
         [HttpGet]
@@ -36,6 +38,10 @@ namespace My_app_backend.Controllers
         [HttpPost]
         public ActionResult<Category> Create(Category category)
         {
+            if(_categoryService.ExistCategoryName(category.Name))
+            {
+                return BadRequest($"Já existe uma Categoria com o nome de {category.Name}");
+            }
             _categoryService.Create(category);
 
             return CreatedAtRoute("GetCategory", new { id = category.Id.ToString() }, category);
@@ -60,14 +66,21 @@ namespace My_app_backend.Controllers
         public IActionResult Delete(string id)
         {
             var category = _categoryService.Get(id);
-
             if (category == null)
             {
                 return NotFound();
             }
-
+            var article = _articleService.GetArticleByCategory(id);
+            if(article != null)
+            {
+                return BadRequest("Categoria possui Artigos relacionados a ela");
+            } 
+            
+            if(_categoryService.ExistSubCategories(category.Name))
+            {
+                return BadRequest("A Categoria possui sub Categorias");
+            }
             _categoryService.Remove(category.Id);
-
             return NoContent();
         }
     }

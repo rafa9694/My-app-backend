@@ -28,10 +28,6 @@ namespace My_app_backend.Services
                     Email = b.Email,
                     Admin = b.Admin
                 };
-             foreach (var item in user)
-             {
-                 Console.WriteLine(item);
-             };
             return user.Select( x => x ).ToList();    
         }
 

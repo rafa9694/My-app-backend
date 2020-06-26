@@ -22,7 +22,6 @@ namespace My_app_backend.Services
 
         public Category Get(string id) =>
             _categories.Find<Category>(category => category.Id == id).FirstOrDefault();
-
         public Category Create(Category category)
         {
             _categories.InsertOne(category);
@@ -37,5 +36,19 @@ namespace My_app_backend.Services
 
         public void Remove(string id) => 
             _categories.DeleteOne(category => category.Id == id);
+
+        
+        public bool ExistSubCategories(string categoryName)
+        {
+            var category = _categories.Find<Category>(category => 
+                category.Path.Contains(categoryName) && category.Name != categoryName).FirstOrDefault();
+            return category != null;
+        }
+
+        public bool ExistCategoryName(string categoryName)
+        {
+           var category = _categories.Find<Category>(category => category.Name == categoryName).FirstOrDefault();
+           return category !=null;
+        }    
     }
 }
