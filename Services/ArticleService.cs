@@ -25,6 +25,8 @@ namespace My_app_backend.Services
         public Article Get(string id) =>
             _articles.Find<Article>(article => article.Id == id).FirstOrDefault();
 
+        public Article GetArticleByCategory(string categoryId) =>
+            _articles.Find<Article>(article => article.Category_Id == categoryId).FirstOrDefault();
         public string Create(Article article)
         {
             var category = _categories.Find<Category>(category => category.Name == article.Category_Id)
