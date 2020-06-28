@@ -22,10 +22,13 @@ namespace My_app_backend.Controllers
         public ActionResult<List<Article>> Get() 
         {
             var list = _articleService.Get();
+
              list.ForEach(element => 
              element.Category_Id = _categoryService.Get(element.Category_Id).Name
             );
+
             return list;
+
         }
 
         [HttpGet("{id:length(24)}", Name = "GetArticle")]
@@ -38,14 +41,14 @@ namespace My_app_backend.Controllers
             }
             
             article.Category_Id = _categoryService.Get(article.Category_Id).Name;
-            
+
             return article;
         }
 
         [HttpPost]
         public ActionResult<Article> Create(Article article)
         {
-             var result =_articleService.Create(article);
+            var result =_articleService.Create(article);
             if(result != "Sucesso") {
                 return NotFound(result);
             }
@@ -62,6 +65,8 @@ namespace My_app_backend.Controllers
                 return NotFound();
             }
 
+            articleIn.Category_Id = _categoryService.GetIdCategoryByName(articleIn.Category_Id).Id;   
+            
             _articleService.Update(id, articleIn);
 
             return NoContent();

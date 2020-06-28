@@ -22,6 +22,10 @@ namespace My_app_backend.Services
 
         public Category Get(string id) =>
             _categories.Find<Category>(category => category.Id == id).FirstOrDefault();
+
+        public Category GetIdCategoryByName(string name) =>
+            _categories.Find<Category>(category => category.Name == name).FirstOrDefault();
+
         public Category Create(Category category)
         {
             _categories.InsertOne(category);
