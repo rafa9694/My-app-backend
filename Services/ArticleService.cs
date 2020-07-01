@@ -25,8 +25,12 @@ namespace My_app_backend.Services
         public Article Get(string id) =>
             _articles.Find<Article>(article => article.Id == id).FirstOrDefault();
 
-        public Article GetArticleByCategory(string categoryId) =>
-            _articles.Find<Article>(article => article.Category_Id == categoryId).FirstOrDefault();
+        public List<Article> PaginationArticlesByCategory(string categoryId, int pageNumber) =>
+            _articles.Find<Article>(article => article.Category_Id == categoryId)
+                .Skip((pageNumber - 1) * 3)
+                .Limit(3).ToList();
+        public List<Article> GetArticlesByCategory(string categoryId) =>
+            _articles.Find<Article>(article => article.Category_Id == categoryId).ToList();
         public string Create(Article article)
         {
             var category = _categories.Find<Category>(category => category.Name == article.Category_Id)

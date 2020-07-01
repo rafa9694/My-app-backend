@@ -70,7 +70,7 @@ namespace My_app_backend.Controllers
             {
                 return NotFound();
             }
-            var article = _articleService.GetArticleByCategory(id);
+            var article = _articleService.GetArticlesByCategory(id);
             if(article != null)
             {
                 return BadRequest("Categoria possui Artigos relacionados a ela");

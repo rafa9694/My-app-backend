@@ -29,6 +29,19 @@ namespace My_app_backend.Controllers
 
             return list;
 
+
+        }
+        [HttpGet("category/{id:length(24)}/{page}")]
+        public ActionResult<List<Article>> GetByCategoryName(string id, int page) 
+        {
+            var category= _categoryService.Get(id);
+            if(category == null) 
+            {
+                BadRequest("O artigo não possui categoria associada a ele!");
+            }
+            var articles = _articleService.PaginationArticlesByCategory(category.Id, page);
+            return articles;
+
         }
 
         [HttpGet("{id:length(24)}", Name = "GetArticle")]
