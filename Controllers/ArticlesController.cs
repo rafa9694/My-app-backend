@@ -2,6 +2,7 @@ using My_app_backend.Models;
 using My_app_backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace My_app_backend.Controllers
 {
@@ -19,6 +20,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<List<Article>> Get() 
         {
             var list = _articleService.Get();
@@ -32,6 +34,7 @@ namespace My_app_backend.Controllers
 
         }
         [HttpGet("category/{id:length(24)}/{page}")]
+        [Authorize]
         public ActionResult<List<Article>> GetByCategoryName(string id, int page) 
         {
             var category= _categoryService.Get(id);
@@ -45,6 +48,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpGet("{id:length(24)}", Name = "GetArticle")]
+        [Authorize]
         public ActionResult<Article> Get(string id)
         {
             var article = _articleService.Get(id);
@@ -59,6 +63,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<Article> Create(Article article)
         {
             var result =_articleService.Create(article);
@@ -69,6 +74,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
+        [Authorize]
         public IActionResult Update(string id, Article articleIn)
         {
             var article = _articleService.Get(id);
@@ -86,6 +92,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
+        [Authorize]
         public IActionResult Delete(string id)
         {
             var article = _articleService.Get(id);

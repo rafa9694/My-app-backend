@@ -2,6 +2,7 @@ using My_app_backend.Models;
 using My_app_backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace My_app_backend.Controllers
 {
@@ -19,10 +20,12 @@ namespace My_app_backend.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<List<Category>> Get() =>
             _categoryService.Get();
 
         [HttpGet("{id:length(24)}", Name = "GetCategory")]
+        [Authorize]
         public ActionResult<Category> Get(string id)
         {
             var category = _categoryService.Get(id);
@@ -36,6 +39,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult<Category> Create(Category category)
         {
             if(_categoryService.ExistCategoryName(category.Name))
@@ -48,6 +52,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Update(string id, Category categoryIn)
         {
             var category = _categoryService.Get(id);
@@ -63,6 +68,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
             var category = _categoryService.Get(id);

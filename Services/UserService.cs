@@ -31,6 +31,10 @@ namespace My_app_backend.Services
             return user.Select( x => x ).ToList();    
         }
 
+        public User GetByName(string Name) =>
+            _users.Find<User>(user => user.Name == Name).FirstOrDefault();
+ 
+
         public UserDto Get(string id) 
         {
 

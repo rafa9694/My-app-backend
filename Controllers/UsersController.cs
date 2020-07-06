@@ -2,6 +2,7 @@ using My_app_backend.Models;
 using My_app_backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace My_app_backend.Controllers
 {
@@ -17,10 +18,12 @@ namespace My_app_backend.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult<List<UserDto>> Get() =>
             _userService.Get();
 
         [HttpGet("{id:length(24)}", Name = "GetUser")]
+        [Authorize(Roles = "Admin,Student")]
         public ActionResult<UserDto> Get(string id)
         {
             var user = _userService.Get(id);
@@ -34,6 +37,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult<User> Create(User user)
         {
             _userService.Create(user);
@@ -42,6 +46,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
+        [Authorize]
         public IActionResult Update(string id, User userIn)
         {
             var user = _userService.Get(id);
@@ -57,6 +62,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
             var user = _userService.Get(id);
