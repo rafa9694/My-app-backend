@@ -18,7 +18,7 @@ namespace My_app_backend.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Student")]
         public ActionResult<List<UserDto>> Get() =>
             _userService.Get();
 
@@ -56,7 +56,30 @@ namespace My_app_backend.Controllers
                 return NotFound();
             }
 
-            _userService.Update(id, userIn);
+            if(userIn == null || userIn.Name == null || userIn.Password == null)
+            {
+                return BadRequest(new { message = "Ùsuário e/ou senha estão vazios" });
+            }
+
+            if(User.IsInRole("Admin"))
+            {
+                _userService.Update(id, userIn);
+            } else 
+            {
+                var UserAutenticated = User.Identity.Name;
+
+                if(_userService.GetByName(UserAutenticated).Id == id) 
+                {
+                    if(userIn.Admin) 
+                    {
+                        return BadRequest(new { message = "Você não possui autorização para transformar um o úsuário em administrador" });
+                    }
+                    _userService.Update(id, userIn);
+                } else 
+                {
+                    return BadRequest(new { message = "Você não possui autorização para atualizar o úsuário" });
+                }
+            }
 
             return NoContent();
         }

@@ -44,7 +44,7 @@ namespace My_app_backend.Controllers
         {
             if(_categoryService.ExistCategoryName(category.Name))
             {
-                return BadRequest($"Já existe uma Categoria com o nome de {category.Name}");
+                return BadRequest(new { message = $"Já existe uma Categoria com o nome de {category.Name}" });
             }
             _categoryService.Create(category);
 
@@ -77,14 +77,14 @@ namespace My_app_backend.Controllers
                 return NotFound();
             }
             var article = _articleService.GetArticlesByCategory(id);
-            if(article != null)
+            if(article.Count > 0)
             {
-                return BadRequest("Categoria possui Artigos relacionados a ela");
+                return BadRequest(new { message = "Categoria possui Artigos relacionados a ela" });
             } 
             
             if(_categoryService.ExistSubCategories(category.Name))
             {
-                return BadRequest("A Categoria possui sub Categorias");
+                return BadRequest(new { message = "A Categoria possui sub Categorias" });
             }
             _categoryService.Remove(category.Id);
             return NoContent();

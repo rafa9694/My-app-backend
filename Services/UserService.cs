@@ -34,6 +34,25 @@ namespace My_app_backend.Services
         public User GetByName(string Name) =>
             _users.Find<User>(user => user.Name == Name).FirstOrDefault();
  
+        public UserDto GetDtoByName(string Name) 
+        {
+            var user = _users.Find<User>(user => user.Name == Name).FirstOrDefault();
+            if(user == null)
+            {
+                return null;
+            }
+
+            var userDto = new UserDto()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Admin = user.Admin
+            };
+
+            return userDto;
+        }
+ 
 
         public UserDto Get(string id) 
         {
